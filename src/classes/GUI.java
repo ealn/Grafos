@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JComboBox;
 
 public class GUI extends JFrame 
 {
@@ -23,22 +24,25 @@ public class GUI extends JFrame
     private static final int  SUCCESS = 0;
     private static final int  FAIL = -1;
 
+    /** Variables **/
+    private boolean        showMap = true;
+    
     /** UI Components **/
     private JPanel         mainPanel;
     private JTabbedPane    mainTabPanel;
     
     /** UI tab **/
     private JPanel         panelGraphs; 
-    private JTextField     citiesTextField;    
     private JLabel         map;
     private JTextField     outputText;
     private JLabel         city1Label;
-    private JTextField     city1Text;
     private JLabel         city2Label;
-    private JTextField     city2Text;
     private JButton        MSTButton;
     private JButton        SPAButton;
     private JLabel         algorithmLabel;
+    private JComboBox      city1ComboBox;
+    private JComboBox      city2ComboBox;
+    private JButton        showButton;
     
     /**
      * Launch the application.
@@ -70,7 +74,7 @@ public class GUI extends JFrame
         setResizable(false);
         setTitle("Grafos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 610, 601);
+        setBounds(100, 100, 668, 663);
         
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.WHITE);
@@ -94,59 +98,51 @@ public class GUI extends JFrame
         panelGraphs.setLayout(null);
         
         map = new JLabel("");
-        map.setBounds(10, 10, 440, 267);
+        map.setBounds(10, 0, 627, 395);
         map.setIcon(new ImageIcon(GUI.class.getResource("/images/mapa.png")));
         panelGraphs.add(map);
         
-        citiesTextField = new JTextField();
-        citiesTextField.setEditable(false);
-        citiesTextField.setBounds(81, 299, 468, 169);
-        panelGraphs.add(citiesTextField);
-        citiesTextField.setColumns(10);
-        
         MSTButton = new JButton("MST");
-        MSTButton.setBounds(460, 29, 119, 23);
+        MSTButton.setBounds(10, 409, 119, 23);
         panelGraphs.add(MSTButton);
         
         SPAButton = new JButton("SPA");
-        SPAButton.setBounds(460, 72, 119, 23);
+        SPAButton.setBounds(139, 409, 119, 23);
         panelGraphs.add(SPAButton);
         
-        JLabel citiesLabel = new JLabel("Ciudades");
-        citiesLabel.setBounds(10, 362, 64, 14);
-        panelGraphs.add(citiesLabel);
-        
         JLabel outputLabel = new JLabel("Resultado");
-        outputLabel.setBounds(10, 479, 64, 14);
+        outputLabel.setBounds(10, 443, 64, 14);
         panelGraphs.add(outputLabel);
         
         outputText = new JTextField();
         outputText.setEditable(false);
-        outputText.setBounds(81, 479, 468, 44);
+        outputText.setBounds(81, 443, 556, 142);
         panelGraphs.add(outputText);
         outputText.setColumns(10);
         
         city1Label = new JLabel("Ciudad #1:");
-        city1Label.setBounds(460, 106, 119, 14);
+        city1Label.setBounds(268, 413, 119, 14);
         panelGraphs.add(city1Label);
         
-        city1Text = new JTextField();
-        city1Text.setBounds(460, 131, 119, 20);
-        panelGraphs.add(city1Text);
-        city1Text.setColumns(10);
-        
-        city2Label = new JLabel("Ciudad #2");
-        city2Label.setBounds(460, 162, 89, 14);
+        city2Label = new JLabel("Ciudad #2:");
+        city2Label.setBounds(455, 413, 89, 14);
         panelGraphs.add(city2Label);
-        
-        city2Text = new JTextField();
-        city2Text.setBounds(460, 187, 119, 20);
-        panelGraphs.add(city2Text);
-        city2Text.setColumns(10);
         
         algorithmLabel = new JLabel("");
         algorithmLabel.setBounds(10, 504, 64, 14);
         panelGraphs.add(algorithmLabel);
+        
+        city1ComboBox = new JComboBox(Grafo.nodes);
+        city1ComboBox.setBounds(330, 410, 119, 20);
+        panelGraphs.add(city1ComboBox);
+        
+        city2ComboBox = new JComboBox(Grafo.nodes);
+        city2ComboBox.setBounds(518, 410, 119, 20);
+        panelGraphs.add(city2ComboBox);
+        
+        showButton = new JButton("Mostrar Grafo");
+        showButton.setBounds(503, 204, 119, 23);
+        panelGraphs.add(showButton);
         
         createActions();
     }
@@ -162,23 +158,13 @@ public class GUI extends JFrame
     {
         int ret = SUCCESS;
         
-        if (city1Text.getText().length() == 0)
+        if (city1ComboBox.getSelectedIndex() == city2ComboBox.getSelectedIndex())
         {
             //Show error message
             JOptionPane.showMessageDialog(null,
-                                          "Por favor escriba la ciudad #1",
+                                          "Las ciudades no pueden ser las mismas",
                                           "Error", 
                                           JOptionPane.ERROR_MESSAGE);
-            ret = FAIL;
-        }
-        else if (city2Text.getText().length() == 0)
-        {
-            //Show error message
-            JOptionPane.showMessageDialog(null,
-                                          "Por favor escriba la ciudad #2",
-                                          "Error", 
-                                          JOptionPane.ERROR_MESSAGE);
-            
             ret = FAIL;
         }
         
@@ -206,7 +192,28 @@ public class GUI extends JFrame
               if (validateSPA() == SUCCESS)
               {
                   algorithmLabel.setText("del SPA");
-                  outputText.setText(SPA.run());
+                  outputText.setText(SPA.run(city1ComboBox.getSelectedIndex(),
+                          city2ComboBox.getSelectedIndex()));
+              }
+          }
+        });
+        
+        showButton.addActionListener(new ActionListener() 
+        {
+          public void actionPerformed(ActionEvent e) 
+          {
+              //toggle button
+              if (showMap)
+              {
+                  showMap = false;
+                  showButton.setText("Mostrar Mapa");
+                  map.setIcon(new ImageIcon(GUI.class.getResource("/images/grafo.png")));
+              }
+              else
+              {
+                  showMap = true;
+                  showButton.setText("Mostrar Grafo");
+                  map.setIcon(new ImageIcon(GUI.class.getResource("/images/mapa.png")));
               }
           }
         });
