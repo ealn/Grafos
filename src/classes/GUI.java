@@ -16,6 +16,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
+import java.awt.SystemColor;
 
 public class GUI extends JFrame 
 {
@@ -145,6 +146,7 @@ public class GUI extends JFrame
         panelGraphs.add(showButton);
         
         textArea = new JTextArea();
+        textArea.setBackground(SystemColor.control);
         textArea.setEditable(false);
         textArea.setBounds(75, 443, 562, 142);
         panelGraphs.add(textArea);
