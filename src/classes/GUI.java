@@ -13,9 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
+import javax.swing.JTextArea;
 
 public class GUI extends JFrame 
 {
@@ -26,6 +26,7 @@ public class GUI extends JFrame
 
     /** Variables **/
     private boolean        showMap = true;
+    private Graph          graph;
     
     /** UI Components **/
     private JPanel         mainPanel;
@@ -34,7 +35,7 @@ public class GUI extends JFrame
     /** UI tab **/
     private JPanel         panelGraphs; 
     private JLabel         map;
-    private JTextField     outputText;
+    private JTextArea      textArea;
     private JLabel         city1Label;
     private JLabel         city2Label;
     private JButton        MSTButton;
@@ -71,6 +72,9 @@ public class GUI extends JFrame
      */
     public GUI() 
     {
+        //Create graph
+        graph = new Graph();
+        
         setResizable(false);
         setTitle("Grafos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,6 +96,8 @@ public class GUI extends JFrame
     /** UI tab **/
     private void createTab()
     {
+        String[] nodes = graph.getNodes();
+        
         panelGraphs = new JPanel();
         panelGraphs.setBackground(Color.WHITE);
         mainTabPanel.addTab("Grafos", null, panelGraphs, null);
@@ -114,12 +120,6 @@ public class GUI extends JFrame
         outputLabel.setBounds(10, 443, 64, 14);
         panelGraphs.add(outputLabel);
         
-        outputText = new JTextField();
-        outputText.setEditable(false);
-        outputText.setBounds(81, 443, 556, 142);
-        panelGraphs.add(outputText);
-        outputText.setColumns(10);
-        
         city1Label = new JLabel("Ciudad #1:");
         city1Label.setBounds(268, 413, 119, 14);
         panelGraphs.add(city1Label);
@@ -129,20 +129,25 @@ public class GUI extends JFrame
         panelGraphs.add(city2Label);
         
         algorithmLabel = new JLabel("");
-        algorithmLabel.setBounds(10, 504, 64, 14);
+        algorithmLabel.setBounds(10, 457, 64, 14);
         panelGraphs.add(algorithmLabel);
         
-        city1ComboBox = new JComboBox(Grafo.nodes);
+        city1ComboBox = new JComboBox(nodes);
         city1ComboBox.setBounds(330, 410, 119, 20);
         panelGraphs.add(city1ComboBox);
         
-        city2ComboBox = new JComboBox(Grafo.nodes);
+        city2ComboBox = new JComboBox(nodes);
         city2ComboBox.setBounds(518, 410, 119, 20);
         panelGraphs.add(city2ComboBox);
         
         showButton = new JButton("Mostrar Grafo");
         showButton.setBounds(503, 204, 119, 23);
         panelGraphs.add(showButton);
+        
+        textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setBounds(75, 443, 562, 142);
+        panelGraphs.add(textArea);
         
         createActions();
     }
@@ -180,7 +185,7 @@ public class GUI extends JFrame
               if (validateMST() == SUCCESS)
               {
                   algorithmLabel.setText("del MST");
-                  outputText.setText(MST.run());
+                  textArea.setText(MST.run(graph));
               }
           }
         });
@@ -192,8 +197,9 @@ public class GUI extends JFrame
               if (validateSPA() == SUCCESS)
               {
                   algorithmLabel.setText("del SPA");
-                  outputText.setText(SPA.run(city1ComboBox.getSelectedIndex(),
-                          city2ComboBox.getSelectedIndex()));
+                  textArea.setText(SPA.run(graph,
+                                           city1ComboBox.getSelectedIndex(),
+                                           city2ComboBox.getSelectedIndex()));
               }
           }
         });
