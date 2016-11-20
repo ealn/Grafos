@@ -97,7 +97,7 @@ public class GUI extends JFrame
     /** UI tab **/
     private void createTab()
     {
-        String[] nodes = graph.getNodes();
+        String[] nodes = graph.getNodesAsStrings();
         
         panelGraphs = new JPanel();
         panelGraphs.setBackground(Color.WHITE);

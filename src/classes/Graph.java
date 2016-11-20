@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Graph 
 {
-    private static final int INFINITY = 2147483647;
-    
     public static String[] nodes = { "Guadalajara", 
                                      "Leon", 
                                      "Aguascalientes", 
@@ -17,18 +15,19 @@ public class Graph
                                      "Mexico",
                                      "Monterrey"};
     
-    public static int[][] connections = { /* Gdl      Leon      Ags       Zacatecas Durango   San Luis  Mazatlan  Tepic     Mexico    Monterrey */
-                /* Guadalajara        */  { INFINITY, 2,        2,        INFINITY, INFINITY, INFINITY, INFINITY, 3,        5,        INFINITY },
-                /* Leon               */  { 2,        INFINITY, 1,        INFINITY, INFINITY, 2,        INFINITY, INFINITY, 4,        INFINITY },
-                /* Aguascalientes     */  { 2,        1,        INFINITY, 1,        INFINITY, 2,        INFINITY, INFINITY, INFINITY, INFINITY },
-                /* Zacatecas          */  { INFINITY, INFINITY, 1,        INFINITY, 3,        2,        INFINITY, INFINITY, INFINITY, 5        },
-                /* Durango            */  { INFINITY, INFINITY, INFINITY, 3,        INFINITY, INFINITY, 2,        INFINITY, INFINITY, 6        },
-                /* San Luis Potosi    */  { INFINITY, 2,        2,        2,        INFINITY, INFINITY, INFINITY, INFINITY, 5,        5        },
-                /* Mazatlan           */  { INFINITY, INFINITY, INFINITY, INFINITY, 2,        INFINITY, INFINITY, 3,        INFINITY, INFINITY },
-                /* Tepic              */  { 3,        INFINITY, INFINITY, INFINITY, INFINITY, INFINITY, 3,        INFINITY, INFINITY, INFINITY },
-                /* Mexico             */  { 5,        4,        INFINITY, INFINITY, INFINITY, 5,        INFINITY, INFINITY, INFINITY, INFINITY },
-                /* Monterrey          */  { INFINITY, INFINITY, INFINITY, 5,        6,        5,        INFINITY, INFINITY, INFINITY, INFINITY }};
+    public static int[][] matrix = { /* Gdl      Leon      Ags       Zacatecas Durango   San Luis  Mazatlan  Tepic     Mexico    Monterrey */
+                /* Guadalajara        */  {0,221,221,0,0,0,0,210,0,0},
+                /* Leon               */  {221,0,126,0,0,181,0,0,405,0},
+                /* Aguascalientes     */  {221,126,0,129,0,166,0,0,0,0},
+                /* Zacatecas          */  {0,0,129,0,291,190,0,0,0,0},
+                /* Durango            */  {0,0,0,291,0,0,258,0,0,586},
+                /* San Luis Potosi    */  {0,181,166,190,0,0,0,0,0,514},
+                /* Mazatlan           */  {0,0,0,0,258,0,0,272,0,0},
+                /* Tepic              */  {210,0,0,0,0,0,272,0,0,0},
+                /* Mexico             */  {0,405,0,0,0,418,0,0,0,0},
+                /* Monterrey          */  {0,0,0,462,586,514,0,0,0,0}};
 
+    public static int V = 10;
     private ArrayList <String> node;
     private ArrayList <Edges> connection;
     
@@ -96,7 +95,12 @@ public class Graph
         connection.add(new Edges("Monterrey", "San Luis Potosi", 5));
     }
 
-    public String[] getNodes()
+    public ArrayList <String> getNodes()
+    {
+    	return node;
+    }
+    
+    public String[] getNodesAsStrings()
     {
         String[] listNodes = new String[node.size()];
         

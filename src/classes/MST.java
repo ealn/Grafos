@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public class MST 
 {
-    public static ArrayList <Edges>  sortedConnectionList;
-    public static ArrayList <Edges>  listMST;
-    public static ArrayList <String> visitedNodes;
+    private static ArrayList <Edges>  sortedConnectionList;
+    private static ArrayList <Edges>  listMST;
+    private static ArrayList <String> visitedNodes;
+    private static int       mark = 0;
     
     public static String run(Graph graph)
     {
@@ -36,6 +37,13 @@ public class MST
             {
                 //Insert Nodes to the list
                 listMST.add(sortedConnectionList.get(i));
+                
+                //if the number of connections is equal to the number of nodes - 1
+                if (listMST.size() == (graph.getNodes().size() - 1))
+                {
+                	//break the loop
+                	break;
+                }
             }
         }
         
@@ -50,27 +58,38 @@ public class MST
         boolean ret = true;
         boolean srcWasVisited = false;
         boolean dstWasVisited = false;
+        boolean isCircularRef = false;
+        int     indexSrc      = -1;
+        int     indexDst      = -1;
         
         for (int i = 0; i < visitedNodes.size(); i++)
         {
             if (src.equals(visitedNodes.get(i)))
             {
                 srcWasVisited = true;
+                indexSrc = i;
             }
             if (dst.equals(visitedNodes.get(i)))
             {
                 dstWasVisited = true;
+                indexDst = i;
             }
         }
         
         //if the source and destination are in the list of nodes visited
         if (srcWasVisited && dstWasVisited)
         {
-            //Cannot be added these elements to the list of MST
-            ret = false;
+        	//Check if these elements do not make a circular reference
+        	isCircularRef = true;
+        	
+        	
+        	if (isCircularRef)
+        	{
+        		//Cannot be added these elements to the list of MST
+        		ret = false;
+        	}
         }
-        
-        if (ret == true)
+        else
         {
             if (!srcWasVisited)
             {
@@ -95,7 +114,7 @@ public class MST
             stringBuf.append(listMST.get(i).getSource() +
                              " -> " +
                              listMST.get(i).getDestination() +
-                             " => " +
+                             " = " +
                              listMST.get(i).getWeight() +
                              "\n");
         }
