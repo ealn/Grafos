@@ -1,3 +1,15 @@
+/**
+ * Copyright (c) 2016 by Adrian Luna
+ *                       Ricardo Gonzales
+ * All Rights Reserved
+ *
+ * Authors: Adrian Luna
+ *          Ricardo Gonzales
+ *
+ * Porpuse: Class that contains the implementation of Dijkstra's Algorithm to calculate
+ *          the minimum spanning tree
+ **/
+
 package classes;
 
 public class SPA 
@@ -6,7 +18,11 @@ public class SPA
     {
         String output = null;
         
-        output = dijkstra(graph.matrix, graph.V, graph.getNodesAsStrings(), souce, destination);
+        output = dijkstra(graph.getMatrix(), 
+                          graph.getNumberOfVertices(), 
+                          graph.getNodesAsStrings(), 
+                          souce, 
+                          destination);
         
         return output;
     }
@@ -49,7 +65,7 @@ public class SPA
         }
         
         printSolution(ciudades, V, dist, V, predecesor, src);
-        recorrido = printPath (ciudades, V, dst,src,predecesor);
+        recorrido = printPath (graph, ciudades, V, dst,src,predecesor);
         return recorrido;
     }
     
@@ -81,12 +97,18 @@ public class SPA
         }
     }
     
-    private static String printPath (String[] ciudades, int V, int destino, int origen, int predecesor []){
+    private static String printPath (int graph[][], String[] ciudades, int V, int destino, int origen, int predecesor []){
         int siguiente = predecesor[destino], saltos = 0;
         int path [] = new int [V];
         StringBuffer sBuffer = new StringBuffer();
+        StringBuffer costStr = new StringBuffer();
+        int          cost = 0;
+        int          index1 = 0;
+        int          index2 = 0;
         String       output = null;
+        int          totalCost = 0;
         
+        index1 = origen;
         sBuffer.append(ciudades[origen]+ " -> ");
         
         while (siguiente != origen ){
@@ -97,14 +119,22 @@ public class SPA
         
         while (saltos > 0){
             saltos--;
+            index2 = path[saltos];
+            cost = graph[index1][index2];
+            totalCost += cost;
             sBuffer.append(ciudades[path[saltos]] + " -> ");
+            costStr.append(cost + " + ");
+            index1 = index2;
             
         }
         
+        index2 = destino;
+        cost = graph[index1][index2];
+        totalCost += cost;
         sBuffer.append(ciudades[destino]);
+        costStr.append(cost + " = " + totalCost);
         
-        //Imprimiendo el buffer
-        System.out.println("\n\nEl camino es: " + sBuffer);
+        sBuffer.append("\nCOSTO TOTAL = " + costStr.toString());
         
         output = sBuffer.toString();
         return output;

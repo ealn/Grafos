@@ -1,3 +1,15 @@
+/**
+ * Copyright (c) 2016 by Adrian Luna
+ *                       Ricardo Gonzales
+ * All Rights Reserved
+ *
+ * Authors: Adrian Luna
+ *          Ricardo Gonzales
+ *
+ * Porpuse: Class that contains the implementation of Kruskal's Algorithm to calculate
+ *          the minimum spanning tree
+ **/
+
 package classes;
 
 import java.util.ArrayList;
@@ -6,8 +18,7 @@ public class MST
 {
     private static ArrayList <Edges>  sortedConnectionList;
     private static ArrayList <Edges>  listMST;
-    private static ArrayList <String> visitedNodes;
-    private static int       mark = 0;
+    private static Subset[] subsets;
     
     public static String run(Graph graph)
     {
@@ -21,10 +32,18 @@ public class MST
     private static String kruskalAlgorithm(Graph graph)
     {
         String ret = null;
-        
+        int    V = graph.getNumberOfVertices();
+        subsets = new Subset[V];
         listMST = new ArrayList <Edges>();
-        visitedNodes = new ArrayList <String>();
-                
+        
+        //create subsets
+        for(int i=0; i< V; ++i)
+        {
+            subsets[i] = new Subset();
+        }
+        
+        Subset.initSubsets(subsets, V);
+        
         //sort connection table
         sortedConnectionList = graph.getSortedConnections();
         
@@ -32,7 +51,8 @@ public class MST
         for (int i = 0; i < sortedConnectionList.size(); i++)
         {
             //validate if the nodes were not visited previously
-            if (valideConnection(sortedConnectionList.get(i).getSource(),
+            if (valideConnection(graph,
+                                 sortedConnectionList.get(i).getSource(),
                                  sortedConnectionList.get(i).getDestination()))
             {
                 //Insert Nodes to the list
@@ -53,52 +73,21 @@ public class MST
         return ret;
     }
     
-    private static boolean valideConnection(String src, String dst)
+    private static boolean valideConnection(Graph graph, String src, String dst)
     {
-        boolean ret = true;
-        boolean srcWasVisited = false;
-        boolean dstWasVisited = false;
-        boolean isCircularRef = false;
-        int     indexSrc      = -1;
-        int     indexDst      = -1;
+        boolean ret = false;
+        int x;
+        int y;
         
-        for (int i = 0; i < visitedNodes.size(); i++)
+        x = Subset.find(subsets, graph.getIndexFromNodeList(src));
+        y = Subset.find(subsets, graph.getIndexFromNodeList(dst));
+
+        // If including this edge does't cause cycle, include it
+        // in result and increment the index of result for next edge
+        if (x != y)
         {
-            if (src.equals(visitedNodes.get(i)))
-            {
-                srcWasVisited = true;
-                indexSrc = i;
-            }
-            if (dst.equals(visitedNodes.get(i)))
-            {
-                dstWasVisited = true;
-                indexDst = i;
-            }
-        }
-        
-        //if the source and destination are in the list of nodes visited
-        if (srcWasVisited && dstWasVisited)
-        {
-        	//Check if these elements do not make a circular reference
-        	isCircularRef = true;
-        	
-        	
-        	if (isCircularRef)
-        	{
-        		//Cannot be added these elements to the list of MST
-        		ret = false;
-        	}
-        }
-        else
-        {
-            if (!srcWasVisited)
-            {
-                visitedNodes.add(src); 
-            }
-            if (!dstWasVisited)
-            {
-                visitedNodes.add(dst);
-            }
+            ret = true;
+            Subset.Union(subsets, x, y);
         }
             
         return ret;
@@ -108,6 +97,7 @@ public class MST
     {
         String str = null;
         StringBuffer stringBuf = new StringBuffer();
+        int    total = 0;
         
         for (int i = 0; i < listMST.size(); i++)
         {
@@ -117,8 +107,11 @@ public class MST
                              " = " +
                              listMST.get(i).getWeight() +
                              "\n");
+            
+            total += listMST.get(i).getWeight();
         }
         
+        stringBuf.append("COSTO TOTAL = " + total);
         str = stringBuf.toString();
         
         return str;

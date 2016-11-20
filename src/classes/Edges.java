@@ -1,6 +1,17 @@
+/**
+ * Copyright (c) 2016 by Adrian Luna
+ *                       Ricardo Gonzales
+ * All Rights Reserved
+ *
+ * Authors: Adrian Luna
+ *          Ricardo Gonzales
+ *
+ * Porpuse: Class that contains the methods to handle the edges
+ **/
+
 package classes;
 
-public class Edges 
+public class Edges
 {
     private String source;
     private String destination;
@@ -15,17 +26,17 @@ public class Edges
     
     public String getSource()
     {
-        return source;
+        return this.source;
     }
     
     public String getDestination()
     {
-        return destination;
+        return this.destination;
     }
     
     public int getWeight()
     {
-        return weight;
+        return this.weight;
     }
     
     public void setSource(String src)

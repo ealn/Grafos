@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2016 by Adrian Luna
+ *                       Ricardo Gonzales
+ * All Rights Reserved
+ *
+ * Authors: Adrian Luna
+ *          Ricardo Gonzales
+ *
+ * Porpuse: Class that contains the infrastructure for the Graphic User interface
+ **/
+
 package classes;
 
 import java.awt.EventQueue;
@@ -79,7 +90,7 @@ public class GUI extends JFrame
         setResizable(false);
         setTitle("Grafos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 668, 663);
+        setBounds(100, 100, 668, 680);
         
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.WHITE);
@@ -148,7 +159,7 @@ public class GUI extends JFrame
         textArea = new JTextArea();
         textArea.setBackground(SystemColor.control);
         textArea.setEditable(false);
-        textArea.setBounds(75, 443, 562, 142);
+        textArea.setBounds(75, 443, 562, 159);
         panelGraphs.add(textArea);
         
         createActions();
