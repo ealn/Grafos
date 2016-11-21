@@ -7,7 +7,7 @@
  *          Ricardo Gonzales
  *
  * Porpuse: Class that contains the implementation of Dijkstra's Algorithm to calculate
- *          the minimum spanning tree
+ *          the shortest path algorithm
  **/
 
 package classes;
